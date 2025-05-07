@@ -18,13 +18,17 @@ const openai = new OpenAIApi(configuration);
 app.post('/chat', async (req, res) => {
   const userMessage = req.body.message;
 
+  if (!userMessage) {
+    return res.status(400).json({ error: 'No message provided.' });
+  }
+
   try {
     const completion = await openai.createChatCompletion({
       model: "gpt-4",
       messages: [
         {
           role: "system",
-          content: "You are HopeLine, an AI emotional support assistant. You are kind, calming, and always direct users in danger to 988 or emergency help. You do not diagnose or give therapy advice."
+          content: "You are HopeLine, a compassionate AI assistant trained to provide emotional support. Offer calming responses and encourage users in crisis to contact 988 or seek professional help. Never provide medical advice or act as a therapist."
         },
         {
           role: "user",
@@ -36,11 +40,11 @@ app.post('/chat', async (req, res) => {
 
     res.json({ reply: completion.data.choices[0].message.content });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "An error occurred." });
+    console.error("OpenAI error:", error.message);
+    res.status(500).json({ error: "Something went wrong. Please try again later." });
   }
 });
 
 app.listen(port, () => {
-  console.log(`HopeLine backend running on port ${port}`);
+  console.log(`HopeLine server is running on port ${port}`);
 });
