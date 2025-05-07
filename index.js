@@ -1,9 +1,10 @@
 
-const express = require('express');
-const cors = require('cors');
-const { Configuration, OpenAIApi } = require('openai');
-require('dotenv').config();
+import express from 'express';
+import cors from 'cors';
+import dotenv from 'dotenv';
+import { Configuration, OpenAIApi } from 'openai';
 
+dotenv.config();
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -28,7 +29,7 @@ app.post('/chat', async (req, res) => {
       messages: [
         {
           role: "system",
-          content: "You are HopeLine, a compassionate AI assistant trained to provide emotional support. Offer calming responses and encourage users in crisis to contact 988 or seek professional help. Never provide medical advice or act as a therapist."
+          content: "You are HopeLine, a compassionate AI assistant trained to provide emotional support. Encourage users to contact 988 if in crisis."
         },
         {
           role: "user",
@@ -41,10 +42,10 @@ app.post('/chat', async (req, res) => {
     res.json({ reply: completion.data.choices[0].message.content });
   } catch (error) {
     console.error("OpenAI error:", error.message);
-    res.status(500).json({ error: "Something went wrong. Please try again later." });
+    res.status(500).json({ error: "Something went wrong." });
   }
 });
 
 app.listen(port, () => {
-  console.log(`HopeLine server is running on port ${port}`);
+  console.log(`HopeLine server running on port ${port}`);
 });
